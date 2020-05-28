@@ -1,0 +1,35 @@
+public with sharing class CaseManager {
+
+    Contact contact {get;set;}
+
+    public caseManager(ApexPages.StandardController controller) {
+        this.contact = (Contact) controller.getRecord();
+    }
+    
+        public Contact getContact() {
+        if(contact == null) {
+            contact = new Contact();
+        }
+        return contact;
+    }
+    
+    // Save case manager wizard
+    public PageReference save() {
+       
+       // Create a contact
+       RecordType rt = [SELECT id,Name FROM RecordType WHERE SobjectType='contact' and name='Insurance Plan Contact'];
+       contact.RecordTypeId = rt.id;
+       insert contact;
+
+       // Update case manager in selected account service record       
+       Account acc = [SELECT id,Name, Case_Manager__c  FROM Account WHERE id =: contact.AccountId];
+       acc.Case_Manager__c = contact.id;
+       update acc;
+    
+       // Once updated redirect the user to the selected account service record
+       PageReference onsave = new PageReference('/'+acc.id);
+       onsave.setredirect(True);
+       return(onsave);
+      }
+
+}
