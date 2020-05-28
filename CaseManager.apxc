@@ -1,11 +1,13 @@
 public with sharing class CaseManager {
-
-    public Contact contact {get;set;}
+    
+    @TestVisible Contact contact {get;set;}
     public Account account {get;set;}
-
+    public String urllink {get;set;}
     public caseManager(ApexPages.StandardController controller) {
         //this.contact = (Contact) controller.getRecord();
         this.account = (Account) controller.getRecord();
+        //urllink = ApexPages.currentPage().getUrl();
+        urllink = System.URL.getSalesforceBaseUrl().toExternalForm();
     }
     
     public Contact getContact() {
@@ -16,22 +18,22 @@ public with sharing class CaseManager {
     }
     
     // Save case manager wizard
-    public PageReference save() {
-       
-        // Create a contact
-       RecordType rt = [SELECT id,Name FROM RecordType WHERE SobjectType='contact' and name='Insurance Plan Contact'];
-       contact.RecordTypeId = rt.id;
-       insert contact;
-
-       // Update case manager in selected account service record       
-       Account acc = [SELECT id,Name, Case_Manager__c  FROM Account WHERE id =: contact.AccountId];
-       acc.Case_Manager__c = contact.id;
-       update acc;
+    public void save() {
+        try{
+            // Create a contact
+            RecordType rt = [SELECT id,Name FROM RecordType WHERE SobjectType='contact' and name='Insurance Plan Contact'];
+            contact.RecordTypeId = rt.id;
+            insert contact;
+            
+            // Update case manager in selected account service record       
+            Account acc = [SELECT id,Name, Case_Manager__c  FROM Account WHERE id =: contact.AccountId];
+            acc.Case_Manager__c = contact.id;
+            update acc;
+            
+        }catch(Exception e){
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Error Occured!!'+e.getMessage()));
+            //return NULL;
+        }
+    }
     
-       // Once updated redirect the user to the selected account service record
-       PageReference onsave = new PageReference('/'+acc.id);
-       onsave.setredirect(false);
-       return(onsave);
-      }
-
 }
