@@ -1,0 +1,11 @@
+trigger Contact_verification on Contact (after insert, after update) {
+    for (Contact contact : Trigger.new) {
+        if (!Test.isRunningTest()) {
+            if(!System.isFuture() && !System.isBatch()) {
+             MDPERSONATOR.MD_GlobalAddressWSExt.doOneGlobalAddress((String)contact.Id);
+             MDPERSONATOR.MD_GlobalEmailWSExt.doOneGlobalEmail((String)contact.Id);
+             MDPERSONATOR.MD_GlobalPhoneWSExt.doOneGlobalPhone((String)contact.Id);     
+            }
+        }
+    }
+}
