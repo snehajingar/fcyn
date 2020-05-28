@@ -1,14 +1,16 @@
 public with sharing class CaseManager {
 
-    Contact contact {get;set;}
+    public Contact contact {get;set;}
+    public Account account {get;set;}
 
     public caseManager(ApexPages.StandardController controller) {
-        this.contact = (Contact) controller.getRecord();
+        //this.contact = (Contact) controller.getRecord();
+        this.account = (Account) controller.getRecord();
     }
     
-        public Contact getContact() {
+    public Contact getContact() {
         if(contact == null) {
-            contact = new Contact();
+            contact = new Contact(AccountId = this.account.Id);
         }
         return contact;
     }
@@ -16,7 +18,7 @@ public with sharing class CaseManager {
     // Save case manager wizard
     public PageReference save() {
        
-       // Create a contact
+        // Create a contact
        RecordType rt = [SELECT id,Name FROM RecordType WHERE SobjectType='contact' and name='Insurance Plan Contact'];
        contact.RecordTypeId = rt.id;
        insert contact;
@@ -28,7 +30,7 @@ public with sharing class CaseManager {
     
        // Once updated redirect the user to the selected account service record
        PageReference onsave = new PageReference('/'+acc.id);
-       onsave.setredirect(True);
+       onsave.setredirect(false);
        return(onsave);
       }
 
