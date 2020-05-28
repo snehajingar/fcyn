@@ -1,0 +1,32 @@
+<apex:page standardController="contact" extensions="CaseManager" showHeader="false" sidebar="false" standardStylesheets="true" lightningStylesheets="false"> 
+            <apex:form >               
+                <apex:pageBlock title="Insurance Plan Contact "> 
+                    <apex:pageBlockSection columns="2"> 
+                            
+                            <apex:inputField id="contactFirstName" value="{!contact.firstName}" styleclass="slds-input"/>
+                      
+                            <apex:inputField id="contactLastName" value="{!contact.lastName}" styleclass="slds-input" required="true" />
+                      
+                            <apex:inputField id="contactemail" value="{!contact.email}" styleclass="slds-input"/>
+                       
+                            <apex:inputField id="contactPhone" value="{!contact.phone}" styleclass="slds-input" required="true" />
+                       
+                            <apex:inputField id="contactphoneex" value="{!contact.Phone_Extenstion__c}" styleclass="slds-input"/>
+                      
+                            <apex:inputField id="contactmobile" value="{!contact.MobilePhone}" styleclass="slds-input"/>
+                      
+                            <apex:inputField id="fax" value="{!contact.fax}" styleclass="slds-input"/>
+                            
+                            
+                            <apex:inputField id="contactaccount" value="{!contact.AccountId}" styleclass="slds-input"/>
+                            
+
+                     </apex:pageBlockSection>
+                     
+                    <apex:commandButton action="{!save}" value="Save" styleClass="slds-button slds-button--brand slds-m-top--medium"/> 
+                
+                    </apex:pageBlock>
+                      
+              </apex:form>
+       
+</apex:page>
