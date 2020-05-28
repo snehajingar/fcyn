@@ -1,13 +1,13 @@
 /**
- * Created by sjingar on 05/27/20.
- */
+* Created by sjingar on 05/27/20.
+*/
 @IsTest
 public class CaseManagerTest {
     public static testMethod void testSave() {
         
-       Account testAccount = new Account();
-       testAccount.Name = 'Test Account'; 
-       insert testAccount;
+        Account testAccount = new Account();
+        testAccount.Name = 'Test Account'; 
+        insert testAccount;
         
         Contact cont             = new Contact();
         cont.FirstName           = 'Demo';
@@ -18,34 +18,34 @@ public class CaseManagerTest {
         cont.Fax                 = '2223334444';
         cont.AccountId           = testAccount.Id;
         cont.RecordTypeId        = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Insurance Plan Contact').getRecordTypeId();
-    
-     Test.setCurrentPageReference(Page.CaseManagerWizard);
-     
-     ApexPages.StandardController standardCtrl = new ApexPages.StandardController(cont);
-
-     CaseManager ctrl = new CaseManager(standardCtrl);
-    
-     PageReference pageRef = null;
-     
-     Test.startTest();
         
-     System.assertEquals(null, pageRef, 'Failed to return expected url.');
-
-     pageRef = ctrl.save();
-     
-     Test.stopTest();
-
-     System.assertEquals(true, pageRef != null && pageRef.getUrl().startsWith('/'+cont.AccountId), 
-                         'Failed to redirect user to account record ser. pageref = ' + null);
+        Test.setCurrentPageReference(Page.CaseManagerWizard);
         
-     System.assertEquals(cont, ctrl.getContact());   
-
-     List<Contact> contacts = [select Id, FirstName, LastName from Contact where Id = :ctrl.getContact().Id];
-     System.assertEquals(1, contacts.size(), 'Failed to set informations on contact.');   
-     System.assertEquals(cont.FirstName, contacts.get(0).FirstName, 'Failed to set FirstName on contact.');
-
-     List<Account> accounts = [select Id, Case_Manager__c from Account where Id = :ctrl.getContact().AccountId];
-     System.assertEquals(1, accounts.size(), 'Failed to set informations on case manager.');
-     System.assertEquals(ctrl.getContact().Id, accounts.get(0).Case_Manager__c, 'Failed to set Case_Manager__c on case manager.');   
+        ApexPages.StandardController standardCtrl = new ApexPages.StandardController(testAccount);
+        
+        CaseManager ctrl = new CaseManager(standardCtrl);
+        
+        PageReference pageRef = null;
+        
+        Test.startTest();
+        
+        System.assertEquals(null, pageRef, 'Failed to return expected url.');
+        ctrl.contact = cont;
+        pageRef = ctrl.save();
+        
+        Test.stopTest();
+        
+        System.assertEquals(true, pageRef != null && pageRef.getUrl().startsWith('/'+cont.AccountId), 
+                            'Failed to redirect user to account record ser. pageref = ' + null);
+        
+        System.assertEquals(cont, ctrl.getContact());   
+        
+        List<Contact> contacts = [select Id, FirstName, LastName from Contact where Id = :ctrl.getContact().Id];
+        System.assertEquals(1, contacts.size(), 'Failed to set informations on contact.');   
+        System.assertEquals(cont.FirstName, contacts.get(0).FirstName, 'Failed to set FirstName on contact.');
+        
+        List<Account> accounts = [select Id, Case_Manager__c from Account where Id = :ctrl.getContact().AccountId];
+        System.assertEquals(1, accounts.size(), 'Failed to set informations on case manager.');
+        System.assertEquals(ctrl.getContact().Id, accounts.get(0).Case_Manager__c, 'Failed to set Case_Manager__c on case manager.');   
     } 
 }
